@@ -1,0 +1,10 @@
+production:
+  adapter: postgresql
+  pool: 50
+  timeout: 5000
+  encoding: utf8
+  host: {{DB_HOST}}
+  database: {{DB_NAME}}
+  username: {{DB_USER}}
+  password: {{DB_PASSWORD}}
+  
