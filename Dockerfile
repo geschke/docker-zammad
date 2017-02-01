@@ -19,9 +19,15 @@ RUN apt-get update && \
     libxslt-dev libxml2-dev libxtables11 logrotate lsb-release mime-support sgml-base ssl-cert sysstat \
     ucf xml-core xz-utils supervisor libgmp-dev \
     imagemagick nginx \
-    && mkdir -p /var/log/supervisor \
+    && mkdir -p /var/log/supervisor 
+
+# install postfix
+RUN echo "postfix postfix/main_mailer_type string Internet site" > /root/preseed.txt \
+    && debconf-set-selections /root/preseed.txt \
+    && apt-get --no-install-recommends install -q -y postfix \
     && rm -rf /var/lib/apt/lists/*
     
+
 RUN useradd zammad -m -d /opt/zammad -s /bin/bash && echo "export RAILS_ENV=production" >> /opt/zammad/.bashrc
 
 USER zammad
