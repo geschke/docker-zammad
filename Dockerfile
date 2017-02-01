@@ -24,7 +24,7 @@ RUN apt-get update && \
 # install postfix
 RUN echo "postfix postfix/main_mailer_type string Internet site" > /root/preseed.txt \
     && debconf-set-selections /root/preseed.txt \
-    && apt-get --no-install-recommends install -q -y postfix \
+    && apt-get --no-install-recommends install -q -y libsasl2-modules postfix \
     && rm -rf /var/lib/apt/lists/*
     
 

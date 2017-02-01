@@ -14,12 +14,37 @@ DB_NAME=${DB_NAME:-zammad}
 DB_PASSWORD=${DB_PASSWORD:-}
 ZAMMAD_SERVER_NAME=${ZAMMAD_SERVER_NAME:-}
 
+POSTFIX_MYHOSTNAME=${POSTFIX_MYHOSTNAME:-}
+POSTFIX_RELAY_HOST=${POSTFIX_RELAY_HOST:-}
+POSTFIX_RELAY_USER=${POSTFIX_RELAY_USER:-}
+POSTFIX_RELAY_PASSWORD=${POSTFIX_RELAY_PASSWORD:-}
 
 sudo -HEu zammad sed 's,{{DB_HOST}},'"${DB_HOST}"',g' -i config/database.yml
 sudo -HEu zammad sed 's,{{DB_USER}},'"${DB_USER}"',g' -i config/database.yml
 sudo -HEu zammad sed 's,{{DB_NAME}},'"${DB_NAME}"',g' -i config/database.yml
 sudo -HEu zammad sed 's,{{DB_PASSWORD}},'"${DB_PASSWORD}"',g' -i config/database.yml
 sed 's,{{ZAMMAD_SERVER_NAME}},'"${ZAMMAD_SERVER_NAME}"',g' -i /etc/nginx/sites-available/zammad.conf
+
+if [ -n "${POSTFIX_RELAY_USER}" ] &&  [ -n "${POSTFIX_RELAY_PASSWORD}" ] ; then
+    echo "${POSTFIX_RELAY_HOST}		${POSTFIX_RELAY_USER}:${POSTFIX_RELAY_PASSWORD}" > /etc/postfix/sasl/saslpass
+    cd /etc/postfix/sasl/
+    postmap saslpass
+    postconf -e "smtp_sasl_password_maps = hash:/etc/postfix/sasl/saslpass"
+fi
+
+if [ -n "${POSTFIX_MYHOSTNAME}" ]; then
+    postconf -e "myhostname = ${POSTFIX_MYHOSTNAME}"
+fi
+
+if [ -n "${POSTFIX_RELAY_HOST}" ]; then
+    postconf -e "relayhost = ${POSTFIX_RELAY_HOST}"
+fi
+
+postconf -e "smtp_sasl_auth_enable = yes"
+postconf -e "smtp_sasl_security_options = noanonymous"
+postconf -e "smtp_use_tls = yes"
+
+
 
 appStart () {
     
