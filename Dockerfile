@@ -56,9 +56,10 @@ RUN /bin/bash -l -c "gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796
 
 USER root 
 
-ADD config/database.yml /opt/zammad/config/database.yml
+COPY config/database.yml /opt/zammad/config/database.yml
 COPY config/zammad.conf /etc/nginx/sites-available/
 COPY config/elasticsearch.conf /etc/nginx/sites-available/
+COPY config/master.cf /etc/postfix/
 RUN ln -s /etc/nginx/sites-available/zammad.conf /etc/nginx/sites-enabled/zammad.conf 
 RUN ln -s /etc/nginx/sites-available/elasticsearch.conf /etc/nginx/sites-enabled/elasticsearch.conf
 
