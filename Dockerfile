@@ -33,8 +33,9 @@ RUN useradd zammad -m -d /opt/zammad -s /bin/bash && echo "export RAILS_ENV=prod
 USER zammad
 
 #RUN cd /opt/zammad && wget https://ftp.zammad.com/zammad-latest.tar.gz && tar -xzf zammad-latest.tar.gz
-RUN cd /opt/zammad && git clone https://github.com/zammad/zammad.git zmd && cp -r zmd/* . \
-    && rm -Rf zmd
+RUN cd /opt/zammad && wget https://ftp.zammad.com/zammad-1.1.2.tar.gz && tar -xzf zammad-1.1.2.tar.gz
+#RUN cd /opt/zammad && git clone https://github.com/zammad/zammad.git zmd && cp -r zmd/* . \
+#    && rm -Rf zmd
 
 WORKDIR /opt/zammad
 
